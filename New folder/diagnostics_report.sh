@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # AutoVitals - Intelligent Vehicle Health Report (Simulated)
-# Author: [Your Name]
 # Version: 1.0
 
 # ANSI Color Codes
@@ -61,7 +60,7 @@ section_header "TIRE SYSTEM"
 kv "Front Left" "33 PSI, 7.2mm" OK
 kv "Front Right" "32.5 PSI, 7.1mm" OK
 kv "Rear Left" "34 PSI, 6.9mm" OK
-kv "Rear Right" "32 PSI, 6.7mm" WARN
+kv "Rear Right" "32 PSI, 6.1mm" WARN
 kv "Tire Load Balance" "93% symmetrical" OK
 
 section_header "BRAKING SYSTEM"
@@ -82,7 +81,7 @@ section_header "SUSPENSION & STRUCTURE"
 kv "Shock Absorbers" "Normal" OK
 kv "Suspension Fatigue Index" "14%" OK
 kv "Ride Height Deviation" "<1.2%" OK
-kv "Vibration Patterns" "Normal" OK
+kv "Vibration Patterns" "Moderate at rear right" WARN
 
 section_header "SAFETY & TELEMATICS"
 kv "ADAS & Lane Assist" "Operational" OK
@@ -94,14 +93,15 @@ section_header "AI PREDICTIONS & INSIGHTS"
 kv "Weather" "Clear, 33°C" OK
 kv "Road Condition" "Hot asphalt" WARN
 kv "Driving Style" "Aggressive in last 3 trips" WARN
-kv "Rear Right Tire Heat" "Slightly above avg." WARN
+kv "Rear Right Tire Heat" "Slightly above average" WARN
 kv "Payload Stress Level" "Medium (2.3 tons)" OK
 
 # Summary
 divider
 echo -e "✅ ${GREEN}SYSTEM STATUS: TRIP READY${NC}"
-echo -e "📌 ${YELLOW}Note:${NC} Rotate rear tires after trip due to uneven wear."
-echo -e "🛡️ ${CYAN}AutoVitals AI confirms vehicle is in optimal condition.${NC}"
+echo -e "📌 ${YELLOW}Note:${NC} Uneven wear and rear vibration detected."
+echo -e "🔧 ${CYAN}Recommendation:${NC} Please get your wheel alignment and rear suspension components inspected after your trip to ensure safety and extend tire life."
+echo -e "🛡️ ${CYAN}AutoVitals AI confirms vehicle is safe to proceed with caution.${NC}"
 echo -e "🏁 ${GREEN}You're cleared to ride. Drive safe and enjoy your journey!${NC}"
 divider
 echo
