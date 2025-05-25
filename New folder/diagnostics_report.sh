@@ -14,9 +14,7 @@ engine_temp=$(( RANDOM % 150 + 50 ))
 brake_pad=$(( RANDOM % 100 ))
 tire_pressure=$(( RANDOM % 40 + 20 ))
 
-# Email recipient
-EMAIL="your_email@example.com"
-SUBJECT="🚗 Daily Vehicle Health Report"
+# Log file path
 LOG_FILE="/tmp/vehicle_health.log"
 
 # Function to log data
@@ -50,9 +48,6 @@ if [[ $tire_pressure -lt $MIN_TIRE_PRESSURE ]]; then
 fi
 
 log_status "✅ Vehicle diagnostics complete."
-
-# Send email report
-cat "$LOG_FILE" | mail -s "$SUBJECT" "$EMAIL"
 
 # Schedule this script to run daily using crontab:
 # Run `crontab -e` and add:
