@@ -1,49 +1,68 @@
 #!/bin/bash
 
-# Define threshold values for alerts
-MAX_RPM=7000
-MIN_OIL_VISCOSITY=30
-MAX_ENGINE_TEMP=120
-MIN_BRAKE_PAD=20
-MIN_TIRE_PRESSURE=30
+echo "🚗 Pre-Trip Vehicle Inspection - Automated Checklist"
 
-# Get user input
-echo "🚗 Enter your trip distance (in km):"
-read -r trip_distance
-
-echo "🚗 Select road type: (1) Highway (2) City (3) Off-road"
-read -r road_type
-
-# Simulate retrieving vehicle data (Replace with actual sensor data)
-engine_rpm=$(( RANDOM % 8000 ))
-oil_viscosity=$(( RANDOM % 50 + 20 ))
-engine_temp=$(( RANDOM % 150 + 50 ))
-brake_pad=$(( RANDOM % 100 ))
-tire_pressure=$(( RANDOM % 40 + 20 ))
-
-# Function to display vehicle condition based on input
-vehicle_health_check() {
-    echo "🚗 Vehicle Diagnostics Report:"
-    echo "-----------------------------------"
-
-    [[ $engine_rpm -gt $MAX_RPM ]] && echo "⚠️ High RPM detected ($engine_rpm). Consider reducing stress on the engine."
-    [[ $oil_viscosity -lt $MIN_OIL_VISCOSITY ]] && echo "⚠️ Low oil viscosity ($oil_viscosity). Risk of wear."
-    [[ $engine_temp -gt $MAX_ENGINE_TEMP ]] && echo "⚠️ Engine overheating ($engine_temp°C). Check cooling system."
-    [[ $brake_pad -lt $MIN_BRAKE_PAD ]] && echo "⚠️ Brake pads are worn out ($brake_pad%). Consider replacement."
-    [[ $tire_pressure -lt $MIN_TIRE_PRESSURE ]] && echo "⚠️ Low tire pressure ($tire_pressure PSI). Check for leaks."
-
-    # Additional insights based on trip and road type
-    echo "-----------------------------------"
-    if [[ $road_type -eq 1 ]]; then
-        echo "🚙 Highway trip: Ensure proper tire pressure and brake efficiency for high speeds."
-    elif [[ $road_type -eq 2 ]]; then
-        echo "🚗 City driving: Watch engine temperature, stop-and-go traffic affects cooling."
-    elif [[ $road_type -eq 3 ]]; then
-        echo "🏔️ Off-road trip: Check tire pressure and suspension components for uneven terrain."
-    fi
-
-    echo "✅ Vehicle health check complete!"
+# Function to prompt user for input (Yes/No)
+check_component() {
+    read -p "✔️ Have you checked $1? (y/n): " response
+    [[ "$response" == "y" ]] && echo "✅ $1 is confirmed!" || echo "⚠️ Warning: $1 needs attention!"
 }
 
-# Run health check
-vehicle_health_check
+echo "===================================="
+echo "🔧 Engine & Fluids:"
+check_component "Engine Oil Level & Condition"
+check_component "Coolant/Antifreeze"
+check_component "Brake Fluid"
+check_component "Transmission Fluid (for automatic vehicles)"
+check_component "Power Steering Fluid"
+check_component "Windshield Washer Fluid"
+
+echo "===================================="
+echo "🛞 Tires:"
+check_component "Tire Pressure (incl. spare)"
+check_component "Tire Tread Depth"
+check_component "Visible Tire Damage"
+check_component "Spare Tire Readiness"
+
+echo "===================================="
+echo "🛑 Brakes:"
+check_component "Brake Pad Thickness"
+check_component "Brake Functionality"
+check_component "ABS & Brake Warning Lights"
+
+echo "===================================="
+echo "🔋 Battery:"
+check_component "Battery Voltage/Charge"
+check_component "Corrosion on Terminals"
+check_component "Age of Battery"
+
+echo "===================================="
+echo "💡 Lights & Electrical:"
+check_component "Headlights (Low/High Beam)"
+check_component "Turn Signals & Brake Lights"
+check_component "Reverse & Fog Lights"
+check_component "Interior Lights, Horn, Wipers"
+
+echo "===================================="
+echo "🧳 Load & Cargo Readiness:"
+check_component "Secure Heavy Luggage"
+check_component "Check Load Limits (GVWR)"
+check_component "Distribute Weight Evenly"
+
+echo "===================================="
+echo "🌍 Navigation & Emergency Equipment:"
+check_component "GPS/Phone Charging Setup"
+check_component "First Aid Kit"
+check_component "Fire Extinguisher"
+check_component "Flashlight & Batteries"
+check_component "Reflective Triangles or Flares"
+check_component "Tool Kit"
+
+echo "===================================="
+
+# Final Decision
+echo "🚦 Evaluating your pre-trip readiness..."
+sleep 2
+echo "🚗 **Final Recommendation:**"
+echo "✅ If all components are checked ✅ - You're good to go!"
+echo "⚠️ If some items are missing, make sure to fix them before departing! Safety first."
