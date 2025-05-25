@@ -56,6 +56,9 @@ echo -e "${CYAN}🚘 **AutoVitals – Intelligent Pre-Trip Vehicle Health Report
 log_status "🕒 Auto-Generated on $DATE"
 log_status "📍 Vehicle ID: AXV-2397 | Driver ID: D-034"
 
+# Disclaimer
+log_status "$(colorize_output "ℹ️ This report is based on previous trip data and currently available diagnostics. Consider manually checking key components before proceeding." "info")"
+
 # Engine System
 log_status "🔧 **ENGINE & POWERTRAIN SYSTEM**"
 log_status "$(colorize_output "📊 Oil Pressure: $oil_pressure PSI (Normal Range: 35–55 PSI)" "info")"
