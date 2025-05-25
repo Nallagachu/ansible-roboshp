@@ -1,68 +1,60 @@
 #!/bin/bash
 
-echo "🚗 Pre-Trip Vehicle Inspection - Automated Checklist"
+# Define thresholds
+MAX_RPM=7000
+MIN_OIL_VISCOSITY=30
+MAX_ENGINE_TEMP=120
+MIN_BRAKE_PAD=20
+MIN_TIRE_PRESSURE=30
 
-# Function to prompt user for input (Yes/No)
-check_component() {
-    read -p "✔️ Have you checked $1? (y/n): " response
-    [[ "$response" == "y" ]] && echo "✅ $1 is confirmed!" || echo "⚠️ Warning: $1 needs attention!"
+# Simulate retrieving vehicle data (Replace with actual sensor data)
+engine_rpm=$(( RANDOM % 8000 ))
+oil_viscosity=$(( RANDOM % 50 + 20 ))
+engine_temp=$(( RANDOM % 150 + 50 ))
+brake_pad=$(( RANDOM % 100 ))
+tire_pressure=$(( RANDOM % 40 + 20 ))
+
+# Generate timestamp for report
+DATE=$(date "+%Y-%m-%d %H:%M:%S")
+
+# Log file location
+REPORT_FILE="/tmp/pre_trip_report.log"
+
+# Function to log diagnostics
+log_status() {
+    echo "[$DATE] $1" >> "$REPORT_FILE"
 }
 
-echo "===================================="
-echo "🔧 Engine & Fluids:"
-check_component "Engine Oil Level & Condition"
-check_component "Coolant/Antifreeze"
-check_component "Brake Fluid"
-check_component "Transmission Fluid (for automatic vehicles)"
-check_component "Power Steering Fluid"
-check_component "Windshield Washer Fluid"
+# Start report
+echo "🚗 **Pre-Trip Vehicle Report** - Generated on $DATE" > "$REPORT_FILE"
+log_status "🚗 **Pre-Trip Vehicle Report** - Generated on $DATE"
 
-echo "===================================="
-echo "🛞 Tires:"
-check_component "Tire Pressure (incl. spare)"
-check_component "Tire Tread Depth"
-check_component "Visible Tire Damage"
-check_component "Spare Tire Readiness"
+# Check vehicle health & log it
+log_status "📊 Engine RPM: $engine_rpm (Max Threshold: $MAX_RPM)"
+log_status "📊 Oil Viscosity: $oil_viscosity (Min Recommended: $MIN_OIL_VISCOSITY)"
+log_status "📊 Engine Temperature: $engine_temp°C (Max Safe Limit: $MAX_ENGINE_TEMP)"
+log_status "📊 Brake Pad Condition: $brake_pad% remaining (Min Safe Limit: $MIN_BRAKE_PAD)"
+log_status "📊 Tire Pressure: $tire_pressure PSI (Min Safe Limit: $MIN_TIRE_PRESSURE)"
 
-echo "===================================="
-echo "🛑 Brakes:"
-check_component "Brake Pad Thickness"
-check_component "Brake Functionality"
-check_component "ABS & Brake Warning Lights"
+# Analyze engine condition based on RPM and temperature
+if [[ $engine_rpm -gt $MAX_RPM || $engine_temp -gt $MAX_ENGINE_TEMP ]]; then
+    log_status "⚠️ Engine Condition: High Stress! RPM and Temperature above safe limits. Consider maintenance."
+else
+    log_status "✅ Engine Condition: Operating Normally."
+fi
 
-echo "===================================="
-echo "🔋 Battery:"
-check_component "Battery Voltage/Charge"
-check_component "Corrosion on Terminals"
-check_component "Age of Battery"
+# Warning messages based on thresholds
+[[ $oil_viscosity -lt $MIN_OIL_VISCOSITY ]] && log_status "⚠️ Oil viscosity too low! Potential wear risk."
+[[ $brake_pad -lt $MIN_BRAKE_PAD ]] && log_status "⚠️ Brake pads are worn! Consider replacement."
+[[ $tire_pressure -lt $MIN_TIRE_PRESSURE ]] && log_status "⚠️ Low tire pressure detected! Inspect for leaks."
 
-echo "===================================="
-echo "💡 Lights & Electrical:"
-check_component "Headlights (Low/High Beam)"
-check_component "Turn Signals & Brake Lights"
-check_component "Reverse & Fog Lights"
-check_component "Interior Lights, Horn, Wipers"
+# Final recommendation
+echo "------------------------------------" >> "$REPORT_FILE"
+if [[ $brake_pad -lt 40 || $tire_pressure -lt 40 || $engine_temp -gt $MAX_ENGINE_TEMP ]]; then
+    log_status "⚠️ 🚨 Maintenance recommended before your trip!"
+else
+    log_status "✅ Vehicle condition looks good! Ride safe. 🏁"
+fi
 
-echo "===================================="
-echo "🧳 Load & Cargo Readiness:"
-check_component "Secure Heavy Luggage"
-check_component "Check Load Limits (GVWR)"
-check_component "Distribute Weight Evenly"
-
-echo "===================================="
-echo "🌍 Navigation & Emergency Equipment:"
-check_component "GPS/Phone Charging Setup"
-check_component "First Aid Kit"
-check_component "Fire Extinguisher"
-check_component "Flashlight & Batteries"
-check_component "Reflective Triangles or Flares"
-check_component "Tool Kit"
-
-echo "===================================="
-
-# Final Decision
-echo "🚦 Evaluating your pre-trip readiness..."
-sleep 2
-echo "🚗 **Final Recommendation:**"
-echo "✅ If all components are checked ✅ - You're good to go!"
-echo "⚠️ If some items are missing, make sure to fix them before departing! Safety first."
+# Display report on screen
+cat "$REPORT_FILE"
