@@ -14,7 +14,7 @@ engine_temp=$(( RANDOM % 150 + 50 ))
 brake_pad=$(( RANDOM % 100 ))
 tire_pressure=$(( RANDOM % 40 + 20 ))
 
-# Log file path
+# Log file location
 LOG_FILE="/tmp/vehicle_health.log"
 
 # Function to log data
@@ -27,28 +27,13 @@ echo "🚗 Running AutoVitals Vehicle Diagnostics..." > "$LOG_FILE"
 log_status "🚗 Running AutoVitals Vehicle Diagnostics..."
 
 # Check vehicle health
-if [[ $engine_rpm -gt $MAX_RPM ]]; then
-    log_status "⚠️ High RPM ($engine_rpm). Consider reducing stress on the engine."
-fi
-
-if [[ $oil_viscosity -lt $MIN_OIL_VISCOSITY ]]; then
-    log_status "⚠️ Oil viscosity too low ($oil_viscosity). Potential wear risk."
-fi
-
-if [[ $engine_temp -gt $MAX_ENGINE_TEMP ]]; then
-    log_status "⚠️ Engine overheating ($engine_temp°C). Check cooling system."
-fi
-
-if [[ $brake_pad -lt $MIN_BRAKE_PAD ]]; then
-    log_status "⚠️ Brake pads too thin ($brake_pad%). Consider replacement."
-fi
-
-if [[ $tire_pressure -lt $MIN_TIRE_PRESSURE ]]; then
-    log_status "⚠️ Tire pressure low ($tire_pressure PSI). Check for leaks."
-fi
+[[ $engine_rpm -gt $MAX_RPM ]] && log_status "⚠️ High RPM ($engine_rpm). Consider reducing stress on the engine."
+[[ $oil_viscosity -lt $MIN_OIL_VISCOSITY ]] && log_status "⚠️ Oil viscosity too low ($oil_viscosity). Potential wear risk."
+[[ $engine_temp -gt $MAX_ENGINE_TEMP ]] && log_status "⚠️ Engine overheating ($engine_temp°C). Check cooling system."
+[[ $brake_pad -lt $MIN_BRAKE_PAD ]] && log_status "⚠️ Brake pads too thin ($brake_pad%). Consider replacement."
+[[ $tire_pressure -lt $MIN_TIRE_PRESSURE ]] && log_status "⚠️ Tire pressure low ($tire_pressure PSI). Check for leaks."
 
 log_status "✅ Vehicle diagnostics complete."
 
-# Schedule this script to run daily using crontab:
-# Run `crontab -e` and add:
-# 0 8 * * * /path/to/vehicle_monitor.sh
+# Display log file contents
+cat "$LOG_FILE"
