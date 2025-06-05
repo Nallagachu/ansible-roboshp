@@ -36,15 +36,9 @@
       dest: /app
       remote_src: yes
 
-  - name: Install dependencies (Ensure package.json exists)
-    ansible.builtin.stat:
-      path: /app/package.json
-    register: package_json_check
-
-  - name: Install dependencies using npm
+  - name: Install dependencies
     community.general.npm:
       path: /app
-    when: package_json_check.stat.exists
 
   - name: Copy catalogue service to system directory
     ansible.builtin.copy:
@@ -59,24 +53,23 @@
     ansible.builtin.service:
       name: catalogue
       state: started
-      enabled: true
+      enabled: yes
+
+  - name: Copy MongoDB repo
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: Install MongoDB client
+    ansible.builtin.dnf:
+      name: mongodb-mongosh
+      state: present
 
   - name: Ensure MongoDB service is running
     ansible.builtin.service:
       name: mongod
       state: started
       enabled: yes
-
-  - name: Copy MongoDB repo file (Ensure it exists before copying)
-    ansible.builtin.copy:
-      src: mongo.repo
-      dest: /etc/yum.repos.d/mongo.repo
-    when: ansible_facts['distribution'] == "CentOS"
-
-  - name: Install MongoDB client
-    ansible.builtin.dnf:
-      name: mongodb-mongosh
-      state: present
 
   - name: Check if 'catalogue' database exists
     ansible.builtin.shell: mongosh --host mongodb.saijyo.store --eval 'db.getMongo().getDBNames().includes("catalogue")'
