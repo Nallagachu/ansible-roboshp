@@ -1,81 +1,85 @@
-- name: configure catalogue component
+- name: Configure catalogue component
   hosts: catalogue
   become: yes
   tasks:
-  - name: disable default nodejs
+  - name: Disable default Node.js
     ansible.builtin.command: dnf module disable nodejs -y
 
-  - name: enable nodejs:20
+  - name: Enable Node.js 20
     ansible.builtin.command: dnf module enable nodejs:20 -y
 
-  - name: Install nodejs
+  - name: Install Node.js
     ansible.builtin.dnf:
       name: nodejs
       state: present
       
-  - name: create app directory
+  - name: Create app directory
     ansible.builtin.file:
       path: /app
       state: directory
 
-  - name: create roboshop system user
+  - name: Create roboshop system user
     ansible.builtin.user:
       name: roboshop
       shell: /sbin/nologin
       system: true
       home: /app
 
-  - name: download catalogue code
+  - name: Download catalogue code
     ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
       dest: /tmp/catalogue.zip
 
-  # this module thinks file exist on ansible control server, needs to extract on to remote machine
-  # remote_src: yes means files already exist in catalogue server
-  - name: extract catalogue code
+  - name: Extract catalogue code
     ansible.builtin.unarchive:
       src: /tmp/catalogue.zip
       dest: /app
       remote_src: yes
 
-  - name: install dependencies
+  - name: Install dependencies
     community.general.npm:
       path: /app
 
-  - name: copy catalogue service to system directory
+  - name: Copy catalogue service to system directory
     ansible.builtin.copy:
       src: catalogue.service
       dest: /etc/systemd/system/catalogue.service
 
-  - name: systemctl deamon reload
+  - name: Reload systemctl daemon
     ansible.builtin.systemd_service:
       daemon_reload: true
 
-  - name: start and enable catalogue
+  - name: Start and enable catalogue
     ansible.builtin.service:
       name: catalogue
       state: started
       enabled: yes
 
-  - name: copy mongodb repo
+  - name: Copy MongoDB repo (Ensure file exists before copying)
     ansible.builtin.copy:
       src: mongo.repo
       dest: /etc/yum.repos.d/mongo.repo
+    when: ansible_facts['distribution'] == "CentOS"
 
-  - name: install mongodb client
+  - name: Install MongoDB client
     ansible.builtin.dnf:
       name: mongodb-mongosh
       state: present
 
-  - name: check products loaded or not
-    ansible.builtin.command: mongosh --host mongodb.saijyo.store --eval 'db.getMongo().getDBNames().indexOf("catalogue")'
+  - name: Ensure MongoDB service is started
+    ansible.builtin.service:
+      name: mongod
+      state: started
+      enabled: yes
+
+  - name: Check if 'catalogue' database exists
+    ansible.builtin.shell: mongosh --host mongodb.saijyo.store --eval 'db.getMongo().getDBNames().includes("catalogue")'
     register: catalogue_output
 
-  - name: print catalogue output
+  - name: Print catalogue database existence check result
     ansible.builtin.debug:
-      msg: "{{ catalogue_output }}"
+      msg: "Catalogue DB Exists: {{ catalogue_output.stdout }}"
 
-  - name: load products
+  - name: Load products into database (Only if 'catalogue' database does not exist)
     ansible.builtin.shell: mongosh --host mongodb.saijyo.store < /app/db/master-data.js
-    when: catalogue_output.stdout | int < 0
-  
+    when: "'true' not in catalogue_output.stdout"
