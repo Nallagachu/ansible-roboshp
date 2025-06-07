@@ -1,0 +1,5 @@
+CATALOGUE_HOST: catalogue.saijyo.store
+USER_HOST: user.saijyo.store
+CART_HOST: cart.saijyo.store
+SHIPPING_HOST: shipping.saijyo.store
+PAYMENT_HOST: payment.saijyo.store

@@ -1,0 +1,2 @@
+REDIS_HOST: redis.saijyo.store
+MONGODB_HOST: mongodb.saijyo.store
