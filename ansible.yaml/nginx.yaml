@@ -7,7 +7,7 @@
     ansible.builtin.dnf:
       name: nginx
       state: installed- name: install nginx
-  hosts: dynamic_frontend
+  hosts: dynamic_frontend1
   become: yes
   serial: 5
   tasks:
