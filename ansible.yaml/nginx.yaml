@@ -1,0 +1,29 @@
+- name: install nginx
+  hosts: dynamic_frontend
+  become: yes
+  serial: 5
+  tasks:ddgfdghdhd
+  - name: install nginx
+    ansible.builtin.dnf:
+      name: nginx
+      state: installed- name: install nginx
+  hosts: dynamic_frontend
+  become: yes
+  serial: 5
+  tasks:
+  - name: install nginx
+    ansible.builtin.dnf:
+      name: nginx
+      state: installed
+
+  - name: run nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: yes
+
+  - name: run nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: yes
