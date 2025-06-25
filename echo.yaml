@@ -1,0 +1,12 @@
+- name : echo
+  description : Echoes the input back to the user.
+  inputs :
+    - name : input
+      type : string
+      description : The input to echo back.
+  outputs :
+    - name : output
+      type : string
+      description : The echoed output.
+  code : |
+    output = input
